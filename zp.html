@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>View your pictures</title>
+</head>
+
+<body>
+    <div id="pictures"></div>
+
+    <script>
+        const token = localStorage.getItem('token');
+
+        if (!token) {
+            window.location.href = 'z.html';
+        }
+
+        async function getPictures() {
+            const response = await fetch('http://127.0.0.1:3000/user/upload-picture', {
+                method: 'GET',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${token}` // Attach the token to the header
+                },
+            });
+
+            const data = await response.json();
+
+            if (data.error) {
+                window.location.href = 'z.html';
+            }
+
+            const pictures = data.pictures;
+
+            const picturesDiv = document.getElementById('pictures');
+
+            pictures.forEach(picture => {
+                const pictureDiv = document.createElement('div');
+                const pictureImage = document.createElement('img');
+                pictureImage.src = data.md5 + '.' + data.extension;
+
+                pictureDiv.appendChild(pictureImage);
+            
+        });
+
+        getPictures();
+
+    }
+
+
+    </script>
+
+</body>
+
+
+</html>
